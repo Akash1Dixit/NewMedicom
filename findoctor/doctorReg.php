@@ -1,6 +1,9 @@
+
 <?php include "includes/header.php" ; ?>
 
                         <?php 
+
+                        $msg = "";
                                      
 
                                      if(isset($_POST['submit_btn'])){
@@ -15,7 +18,34 @@
                                      	$office_phone_register=$_POST['office_phone_register'];
                                      	$email_register=$_POST['email_register'];
 
-                                     $query = "INSERT INTO doctor_reg VALUES ('', '$name','$lastname_register','$specialization','$city_register','$country_register','$address_register','$pin_register','$office_phone_register','$email_register') ";
+
+
+          if (!preg_match("/^[a-zA-Z ]*$/",$name) ) {
+    	$msg =  "Only letters and white-spaces are allowed";
+
+    } if(!preg_match("/^[a-zA-Z ]*$/",$lastname_register))
+    {
+    	$msg =  "Only letters and white-spaces are allowed";
+    }
+
+     if(!preg_match("/^[a-zA-Z0-9._-]{3,}@[a-zA-z0-9._-]{3,}[.]{1}[a-zA-z0-9._-]{2,}^/", $email_register)){
+     	$msg = "only valid email";
+     }
+
+     
+         	
+
+        
+	  
+
+		      $query =  "SELECT id FROM doctor_reg WHERE email_register ='$email_register' " ;  
+             		$result = mysqli_query($connection,$query);
+             		if ($result->num_rows > 0) {
+                    $msg = "Email already exists in the database!";
+
+	          }    else
+                   {
+     	            $query = "INSERT INTO doctor_reg VALUES ('', '$name','$lastname_register','$specialization','$city_register','$country_register','$address_register','$pin_register','$office_phone_register','$email_register') " ;
 
                                       $result = mysqli_query($connection,$query);
 
@@ -27,8 +57,46 @@
                                        	     header("Location:login.php");
                                        }
 
+	                                      } 
+                       
 
+
+                     	
+
+
+                
+	
+} 
+
+
+                                       /*
+                                       	 $query = "SELECT id FROM doctor_reg WHERE email_register='$email_register' " ; 
+             		                     $result = mysqli_query($connection,$query);
+             		                     if ($result->num_rows > 0) {
+                                         $msg = "Email already exists in the database!";
+                                       }
+                                   
                                      }
+                                         else {
+
+                                      	$query = "INSERT INTO doctor_reg VALUES ('', '$name','$lastname_register','$specialization','$city_register','$country_register','$address_register','$pin_register','$office_phone_register','$email_register') ";
+
+                                      $result = mysqli_query($connection,$query);
+
+                                       if(!$result){
+                                       	die("connection failed".mysqli_error($connection));
+                                       }
+                                       else {
+                                       	   
+                                       	     header("Location:login.php");
+                                       }
+
+	                                      }   */
+
+                                  
+
+                                  
+                              
 
                         ?> 
 
@@ -89,16 +157,17 @@
 					<div class="col-lg-5 ml-auto">
 						<div class="box_form">
 							<div id="message-register"></div>
+							<?php if($msg !="") echo $msg."<br><br>";  ?>
 							<form method="post" action=" ">
 								<div class="row">
 									<div class="col-md-6 ">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Name" name="name_register" >
+											<input type="text" class="form-control" placeholder="Name" name="name_register" required />
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Last Name" name="lastname_register" >
+											<input type="text" class="form-control" placeholder="Last Name" name="lastname_register" required />
 										</div>
 									</div>
 								</div>
@@ -106,7 +175,7 @@
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Specialization" name="specialization">
+											<input type="text" class="form-control" placeholder="Specialization" name="specialization" required />
 										</div>
 									</div>
 								</div>
@@ -114,7 +183,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="City" name="city_register" >
+											<input type="text" class="form-control" placeholder="City" name="city_register" required / >
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -132,7 +201,7 @@
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Address" name="address_register" >
+											<input type="text" class="form-control" placeholder="Address" name="address_register" required />
 										</div>
 									</div>
 								</div>
@@ -140,12 +209,12 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Pincode" name="pin_register">
+											<input type="text" class="form-control" placeholder="Pincode" name="pin_register" required />
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Office Phone" name="office_phone_register" >
+											<input type="tel" class="form-control" placeholder="Office Phone" name="office_phone_register" required />
 										</div>
 									</div>
 								</div>
@@ -161,7 +230,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<input type="text" id="verify_register" class="form-control" placeholder="Human verify: 3 + 1 =?">
+											<input type="text" id="verify_register" class="form-control" placeholder="Human verify: 3 + 1 =?" required />
 										</div>
 									</div>
 								</div>
