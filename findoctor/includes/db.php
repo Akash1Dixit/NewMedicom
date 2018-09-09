@@ -1,5 +1,5 @@
 <?php 
-
+// to check a pull request
   $db['db_host']= "localhost";
   $db['db_user']= "root";
   $db['db_pass']= "";
